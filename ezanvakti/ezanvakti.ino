@@ -17,18 +17,32 @@ String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
 
+int last_updatesec_time;
+
 String imsak;
 String gunes;
 String ogle;
 String ikindi;
 String aksam;
 String yatsi;
+String current_time_short;
+String aksam_short;
+String imsak_short;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 
+// Pin tanımlamaları
+const int D1_PIN = D1;
+const int D2_PIN = D2;
+
 void setup() {
   Serial.begin(115200);
+  pinMode(D1_PIN, OUTPUT);
+  pinMode(D2_PIN, OUTPUT);
+  digitalWrite(D1_PIN, LOW);
+  digitalWrite(D2_PIN, LOW);
+
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -120,10 +134,34 @@ void getPrayerTimes() {
   }
 }
 
-
 void loop() {
-  timeClient.update();
-  getFormattedDate();
-  getPrayerTimes();
-  delay(1000);
+    unsigned long secMillis = millis();
+    if (secMillis - last_updatesec_time >= 60000) {
+        getPrayerTimes();;
+    }
+
+    timeClient.update();
+    getFormattedDate();
+    delay(1000);
+
+    current_time_short = current_time.substring(0, 5);
+    aksam_short = aksam.substring(0, 5);
+    imsak_short = imsak.substring(0, 5); 
+    Serial.println("test Saat: " + current_time_short);
+    Serial.println("test aksam: " + aksam_short);
+    Serial.println("test imsak: " + imsak_short);
+    delay(10000);
+    if (current_time_short == imsak_short) {
+        digitalWrite(D1_PIN, HIGH); // D1 pini açık
+        Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
+    } else {
+        digitalWrite(D1_PIN, LOW); // D1 pini kapalı
+    }
+
+    if (current_time_short == aksam_short) {
+        digitalWrite(D2_PIN, HIGH); // D2 pini açık
+        Serial.println("İftar Saati: Allah kabul etsin");
+    } else {
+        digitalWrite(D2_PIN, LOW); // D2 pini kapalı
+    }  
 }
