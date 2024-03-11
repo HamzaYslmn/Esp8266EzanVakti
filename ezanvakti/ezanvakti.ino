@@ -12,14 +12,14 @@ const char* password = "12345678999";
 String current_date;
 String current_time;
 int time_offset_saniye = 10800;
-String time_offset_dakika = "90";
+String time_offset_dakika = "180";
 String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
 
 int sec60 = 60;
 
-String imsak;
+String imsak = "boş";
 String gunes;
 String ogle;
 String ikindi;
@@ -53,10 +53,15 @@ void setup() {
 
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
-  do {
+  for (int i = 0; i < 3; i++) {
     getFormattedDate();
+    delay(1000);
     getPrayerTimes();
-  } while (current_date != "1970-01-01" && imsak != "");
+    delay(1000);
+    if (current_date.c_str() != "1970-01-01" && imsak != "boş") {
+      break;
+    }
+  }
 }
 
 void getFormattedDate() {

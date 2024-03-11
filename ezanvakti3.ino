@@ -19,7 +19,7 @@ String longitude = "32.85427";
 
 int sec60 = 60;
 
-String imsak;
+String imsak = "boş";
 String gunes;
 String ogle;
 String ikindi;
@@ -35,6 +35,7 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 // Pin tanımlamaları
 const int D1_PIN = D1;
 const int D2_PIN = D2;
+const int ONBOARD_LED = D4;
 
 void setup() {
   Serial.begin(115200);
@@ -52,10 +53,15 @@ void setup() {
 
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
-  do {
+  for (int i = 0; i < 3; i++) {
     getFormattedDate();
+    delay(1000);
     getPrayerTimes();
-  } while (current_date != "1970-01-01" && imsak != "");
+    delay(1000);
+    if (current_date.c_str() != "1970-01-01" && imsak != "boş") {
+      break;
+    }
+  }
 }
 
 void getFormattedDate() {
