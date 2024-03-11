@@ -19,7 +19,7 @@ String longitude = "32.85427";
 
 int sec60 = 60;
 
-String imsak;
+String imsak = "boş";
 String gunes;
 String ogle;
 String ikindi;
@@ -35,14 +35,16 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 // Pin tanımlamaları
 const int D1_PIN = D1;
 const int D2_PIN = D2;
-const int ONBOARD_LED = D4;
+const int ONBOARD_LED = 2; // D4 pinine karşılık gelen GPIO pin numarası
 
 void setup() {
   Serial.begin(115200);
   pinMode(D1_PIN, OUTPUT);
   pinMode(D2_PIN, OUTPUT);
+  pinMode(ONBOARD_LED, OUTPUT);
   digitalWrite(D1_PIN, LOW);
   digitalWrite(D2_PIN, LOW);
+  digitalWrite(ONBOARD_LED, LOW);
 
   WiFi.begin(ssid, password);
 
@@ -64,6 +66,8 @@ void setup() {
     getPrayerTimes();
     delay(1000);
   }
+
+  digitalWrite(ONBOARD_LED, HIGH); // Onboard LED'i söndür (ters çalışır)
   
 }
 

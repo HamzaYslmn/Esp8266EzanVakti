@@ -35,14 +35,16 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 // Pin tanımlamaları
 const int D1_PIN = D1;
 const int D2_PIN = D2;
-const int ONBOARD_LED = D4;
+const int ONBOARD_LED = 2; // D4 pinine karşılık gelen GPIO pin numarası
 
 void setup() {
   Serial.begin(115200);
   pinMode(D1_PIN, OUTPUT);
   pinMode(D2_PIN, OUTPUT);
+  pinMode(ONBOARD_LED, OUTPUT);
   digitalWrite(D1_PIN, LOW);
   digitalWrite(D2_PIN, LOW);
+  digitalWrite(ONBOARD_LED, LOW);
 
   WiFi.begin(ssid, password);
 
@@ -64,6 +66,8 @@ void setup() {
     getPrayerTimes();
     delay(1000);
   }
+
+  digitalWrite(ONBOARD_LED, HIGH); // Onboard LED'i söndür (ters çalışır)
   
 }
 
@@ -151,12 +155,6 @@ void getPrayerTimes() {
 void loop() {
   getFormattedDate();
   delay(1000);
-  sec60++;
-
-  if (sec60 >= 60) {
-    getPrayerTimes();
-    sec60 = 0;
-  }
 
   current_time_short = current_time.substring(0, 2);
   aksam_short = aksam.substring(0, 2);
