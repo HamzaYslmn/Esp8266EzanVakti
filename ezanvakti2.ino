@@ -10,11 +10,19 @@
 const char* ssid = "Hamza";
 const char* password = "12345678999";
 String current_date;
+String current_time;
 int time_offset_saniye = 10800;
 String time_offset_dakika = "180";
 String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
+
+String imsak;
+String gunes;
+String ogle;
+String ikindi;
+String aksam;
+String yatsi;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
@@ -33,7 +41,6 @@ void setup() {
 }
 
 void getFormattedDate() {
-  timeClient.update();
   long epochTime = timeClient.getEpochTime();
   struct tm *timeinfo;
   time_t rawtime = epochTime;
@@ -42,6 +49,8 @@ void getFormattedDate() {
   sprintf(formattedDate, "%04d-%02d-%02d", timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday);
   current_date = String(formattedDate);
   Serial.println("Tarih: " + current_date);
+  current_time = timeClient.getFormattedTime();
+  Serial.println("Saat: " + current_time);
 }
 
 
@@ -86,12 +95,12 @@ void getPrayerTimes() {
         Serial.print(", Lon ");
         Serial.println(lon, 5);
 
-        String imsak = prayerTimes[0].as<String>();
-        String gunes = prayerTimes[1].as<String>();
-        String ogle = prayerTimes[2].as<String>();
-        String ikindi = prayerTimes[3].as<String>();
-        String aksam = prayerTimes[4].as<String>();
-        String yatsi = prayerTimes[5].as<String>();
+        imsak = prayerTimes[0].as<String>();
+        gunes = prayerTimes[1].as<String>();
+        ogle = prayerTimes[2].as<String>();
+        ikindi = prayerTimes[3].as<String>();
+        aksam = prayerTimes[4].as<String>();
+        yatsi = prayerTimes[5].as<String>();
 
         Serial.println("İmsak: " + imsak);
         Serial.println("Güneş: " + gunes);
@@ -114,7 +123,6 @@ void getPrayerTimes() {
 
 void loop() {
   timeClient.update();
-  Serial.println(timeClient.getFormattedTime());
   getFormattedDate();
   getPrayerTimes();
   delay(1000);
