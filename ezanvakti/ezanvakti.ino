@@ -54,12 +54,13 @@ void setup() {
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
   for (int i = 0; i < 3; i++) {
-      timeClient.update();
-      getPrayerTimes();
+    getFormattedDate();
+    getPrayerTimes();
   }
 }
 
 void getFormattedDate() {
+  timeClient.update();
   long epochTime = timeClient.getEpochTime();
   struct tm *timeinfo;
   time_t rawtime = epochTime;
@@ -140,14 +141,13 @@ void getPrayerTimes() {
 }
 
 void loop() {
-  timeClient.update();
   getFormattedDate();
   delay(1000);
   sec60++;
 
   if (sec60 >= 60) {
-      getPrayerTimes();
-      sec60 = 0;
+    getPrayerTimes();
+    sec60 = 0;
   }
 
   current_time_short = current_time.substring(0, 2);
@@ -157,16 +157,16 @@ void loop() {
   Serial.println("test aksam: " + aksam_short);
   Serial.println("test imsak: " + imsak_short);
   if (current_time_short == imsak_short) {
-      digitalWrite(D1_PIN, HIGH); // D1 pini açık
-      Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
+    digitalWrite(D1_PIN, HIGH); // D1 pini açık
+    Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
   } else {
-      digitalWrite(D1_PIN, LOW); // D1 pini kapalı
+    digitalWrite(D1_PIN, LOW); // D1 pini kapalı
   }
 
   if (current_time_short == aksam_short) {
-      digitalWrite(ONBOARD_LED, HIGH); // D2 pini açık
-      Serial.println("İftar Saati: Allah kabul etsin");
+    digitalWrite(ONBOARD_LED, HIGH); // D2 pini açık
+    Serial.println("İftar Saati: Allah kabul etsin");
   } else {
-      digitalWrite(ONBOARD_LED, LOW); // D2 pini kapalı
+    digitalWrite(ONBOARD_LED, LOW); // D2 pini kapalı
   }  
 }

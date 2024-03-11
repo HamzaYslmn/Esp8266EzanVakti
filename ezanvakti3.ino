@@ -53,12 +53,13 @@ void setup() {
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
   for (int i = 0; i < 3; i++) {
-    timeClient.update();
+    getFormattedDate();
     getPrayerTimes();
   }
 }
 
 void getFormattedDate() {
+  timeClient.update();
   long epochTime = timeClient.getEpochTime();
   struct tm *timeinfo;
   time_t rawtime = epochTime;
@@ -139,7 +140,6 @@ void getPrayerTimes() {
 }
 
 void loop() {
-  timeClient.update();
   getFormattedDate();
   delay(1000);
   sec60++;
