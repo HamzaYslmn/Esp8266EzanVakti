@@ -73,7 +73,9 @@ void getPrayerTimes() {
         String city = place["city"];
         float lat = place["latitude"];
         float lon = place["longitude"];
-        JsonArray prayerTimes = times[current_date];
+
+        // Belirtilen tarihin namaz vakitlerini al
+        JsonArray prayerTimes = times["2024-03-11"];
 
         Serial.println("Namaz Saatleri: " + city);
         Serial.print("Konumu: Lat ");
@@ -83,7 +85,7 @@ void getPrayerTimes() {
 
         Serial.println("İmsak: " + String(prayerTimes[0].as<String>()));
         Serial.println("Güneş: " + String(prayerTimes[1].as<String>()));
-        Serial.println("Çğle: " + String(prayerTimes[2].as<String>()));
+        Serial.println("Öğle: " + String(prayerTimes[2].as<String>()));
         Serial.println("İkindi: " + String(prayerTimes[3].as<String>()));
         Serial.println("Akşam: " + String(prayerTimes[4].as<String>()));
         Serial.println("Yatsı: " + String(prayerTimes[5].as<String>()));
@@ -98,6 +100,7 @@ void getPrayerTimes() {
     Serial.println("WiFi bağlantısı yok");
   }
 }
+
 
 void loop() {
   timeClient.update();
