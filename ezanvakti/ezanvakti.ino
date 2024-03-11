@@ -53,10 +53,10 @@ void setup() {
 
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
-  for (int i = 0; i < 3; i++) {
+  do {
     getFormattedDate();
     getPrayerTimes();
-  }
+  } while (current_date == "1970-01-01" || imsak == "");
 }
 
 void getFormattedDate() {
