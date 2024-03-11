@@ -17,7 +17,7 @@ String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
 
-int last_updatesec_time;
+int last_updatesec_time = 60000;
 
 String imsak;
 String gunes;
@@ -150,7 +150,6 @@ void loop() {
     Serial.println("test Saat: " + current_time_short);
     Serial.println("test aksam: " + aksam_short);
     Serial.println("test imsak: " + imsak_short);
-    delay(10000);
     if (current_time_short == imsak_short) {
         digitalWrite(D1_PIN, HIGH); // D1 pini açık
         Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
