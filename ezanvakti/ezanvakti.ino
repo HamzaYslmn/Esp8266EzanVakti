@@ -170,9 +170,9 @@ void loop() {
   }
 
   if (current_time_short == aksam_short) {
-    digitalWrite(ONBOARD_LED, HIGH); // D2 pini açık
+    digitalWrite(ONBOARD_LED, LOW); // D4 pini açık
     Serial.println("İftar Saati: Allah kabul etsin");
   } else {
-    digitalWrite(ONBOARD_LED, LOW); // D2 pini kapalı
+    digitalWrite(ONBOARD_LED, HIGH); // D4 pini kapalı
   }  
 }
