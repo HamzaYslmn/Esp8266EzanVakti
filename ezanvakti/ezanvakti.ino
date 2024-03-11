@@ -4,6 +4,7 @@
 #include <WiFiUdp.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecureBearSSL.h>
+#include <ArduinoJson.h>
 
 // WiFi ağ bilgileriniz
 const char* ssid = "Hamza";
@@ -15,9 +16,7 @@ String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
 
-
 WiFiUDP ntpUDP;
-
 NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 
 void setup() {
@@ -47,10 +46,10 @@ void getPrayerTimes() {
   if ((WiFi.status() == WL_CONNECTED)) {
 
     std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
-    // Ignore SSL certificate validation
+    // SSL sertifikası doğrulamasını yok say
     client->setInsecure();
     
-    //create an HTTPClient instance
+    // HTTPClient örneği oluştur
     HTTPClient https;
 
     // Namaz vakitlerini almak için API isteği yap
@@ -63,6 +62,31 @@ void getPrayerTimes() {
       if (httpCode == HTTP_CODE_OK) { // 200 OK yanıtı alındıysa
         String payload = https.getString(); // Yanıtı al
         Serial.println("Namaz vakitleri: " + payload); // Seri monitöre yazdır
+
+        // JSON verilerini ayrıştır
+        DynamicJsonDocument doc(1024);
+        deserializeJson(doc, payload);
+
+        JsonObject place = doc["place"];
+        JsonObject times = doc["times"];
+        
+        String city = place["city"];
+        float lat = place["latitude"];
+        float lon = place["longitude"];
+        JsonArray prayerTimes = times[current_date];
+
+        Serial.println("Namaz Saatleri: " + city);
+        Serial.print("Konumu: Lat ");
+        Serial.print(lat, 5);
+        Serial.print(", Lon ");
+        Serial.println(lon, 5);
+
+        Serial.println("İmsak: " + String(prayerTimes[0].as<String>()));
+        Serial.println("Güneş: " + String(prayerTimes[1].as<String>()));
+        Serial.println("Çğle: " + String(prayerTimes[2].as<String>()));
+        Serial.println("İkindi: " + String(prayerTimes[3].as<String>()));
+        Serial.println("Akşam: " + String(prayerTimes[4].as<String>()));
+        Serial.println("Yatsı: " + String(prayerTimes[5].as<String>()));
       }
     } else {
       Serial.println("HTTP isteği başarısız");
