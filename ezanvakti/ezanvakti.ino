@@ -58,7 +58,7 @@ void setup() {
   timeClient.begin();
   getFormattedDate();
 
-  while (tarih_short == "1970" && tarih_short == "") {
+  while (tarih_short == "1970" || tarih_short == "") {
     getFormattedDate();
     tarih_short = current_date.substring(0, 4);
     delay(1000);
@@ -66,7 +66,7 @@ void setup() {
 
   getPrayerTimes();
   
-  while (imsak_short == "null" && imsak_short == "") {
+  while (imsak_short == "null" || imsak_short == "") {
     getPrayerTimes();
     imsak_short = imsak.substring(0, 4);
     delay(1000);
