@@ -17,7 +17,7 @@ String calculationMethod = "Turkey";
 String latitude = "39.91987";
 String longitude = "32.85427";
 
-int last_updatesec_time = 60000;
+int sec60 = 60;
 
 String imsak;
 String gunes;
@@ -135,14 +135,16 @@ void getPrayerTimes() {
 }
 
 void loop() {
-    unsigned long secMillis = millis();
-    if (secMillis - last_updatesec_time >= 60000) {
-        getPrayerTimes();;
-    }
-
+    
     timeClient.update();
     getFormattedDate();
     delay(1000);
+    sec60++;
+
+    if (sec60 >= 60) {
+        getPrayerTimes();
+        sec60 = 0;
+    }
 
     current_time_short = current_time.substring(0, 5);
     aksam_short = aksam.substring(0, 5);
