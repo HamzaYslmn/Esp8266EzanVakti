@@ -35,6 +35,7 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", time_offset_saniye);
 // Pin tanımlamaları
 const int D1_PIN = D1;
 const int D2_PIN = D2;
+const int ONBOARD_LED = D4;
 
 void setup() {
   Serial.begin(115200);
@@ -52,6 +53,10 @@ void setup() {
 
   Serial.println("WiFi bağlantısı başarılı");
   timeClient.begin();
+  for (int i = 0; i < 3; i++) {
+      timeClient.update();
+      getPrayerTimes();
+  }
 }
 
 void getFormattedDate() {
@@ -135,34 +140,33 @@ void getPrayerTimes() {
 }
 
 void loop() {
-    
-    timeClient.update();
-    getFormattedDate();
-    delay(1000);
-    sec60++;
+  timeClient.update();
+  getFormattedDate();
+  delay(1000);
+  sec60++;
 
-    if (sec60 >= 60) {
-        getPrayerTimes();
-        sec60 = 0;
-    }
+  if (sec60 >= 60) {
+      getPrayerTimes();
+      sec60 = 0;
+  }
 
-    current_time_short = current_time.substring(0, 2);
-    aksam_short = aksam.substring(0, 2);
-    imsak_short = imsak.substring(0, 2); 
-    Serial.println("test Saat: " + current_time_short);
-    Serial.println("test aksam: " + aksam_short);
-    Serial.println("test imsak: " + imsak_short);
-    if (current_time_short == imsak_short) {
-        digitalWrite(D1_PIN, HIGH); // D1 pini açık
-        Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
-    } else {
-        digitalWrite(D1_PIN, LOW); // D1 pini kapalı
-    }
+  current_time_short = current_time.substring(0, 2);
+  aksam_short = aksam.substring(0, 2);
+  imsak_short = imsak.substring(0, 2); 
+  Serial.println("test Saat: " + current_time_short);
+  Serial.println("test aksam: " + aksam_short);
+  Serial.println("test imsak: " + imsak_short);
+  if (current_time_short == imsak_short) {
+      digitalWrite(D1_PIN, HIGH); // D1 pini açık
+      Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
+  } else {
+      digitalWrite(D1_PIN, LOW); // D1 pini kapalı
+  }
 
-    if (current_time_short == aksam_short) {
-        digitalWrite(D2_PIN, HIGH); // D2 pini açık
-        Serial.println("İftar Saati: Allah kabul etsin");
-    } else {
-        digitalWrite(D2_PIN, LOW); // D2 pini kapalı
-    }  
+  if (current_time_short == aksam_short) {
+      digitalWrite(ONBOARD_LED, HIGH); // D2 pini açık
+      Serial.println("İftar Saati: Allah kabul etsin");
+  } else {
+      digitalWrite(ONBOARD_LED, LOW); // D2 pini kapalı
+  }  
 }
