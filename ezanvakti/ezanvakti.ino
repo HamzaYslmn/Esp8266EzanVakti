@@ -56,7 +56,7 @@ void setup() {
   do {
     getFormattedDate();
     getPrayerTimes();
-  } while (current_date == "1970-01-01" || imsak == "");
+  } while (current_date != "1970-01-01" && imsak != "");
 }
 
 void getFormattedDate() {
