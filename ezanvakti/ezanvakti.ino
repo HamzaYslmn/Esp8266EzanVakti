@@ -38,9 +38,12 @@ void getFormattedDate() {
   struct tm *timeinfo;
   time_t rawtime = epochTime;
   timeinfo = localtime(&rawtime);
-  current_date = String(timeinfo->tm_year + 1900) + "-" + String(timeinfo->tm_mon + 1) + "-" + String(timeinfo->tm_mday);
+  char formattedDate[11];
+  sprintf(formattedDate, "%04d-%02d-%02d", timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday);
+  current_date = String(formattedDate);
   Serial.println("Tarih: " + current_date);
 }
+
 
 void getPrayerTimes() {
   if ((WiFi.status() == WL_CONNECTED)) {
@@ -75,7 +78,7 @@ void getPrayerTimes() {
         float lon = place["longitude"];
 
         // Belirtilen tarihin namaz vakitlerini al
-        JsonArray prayerTimes = times["2024-03-11"];
+        JsonArray prayerTimes = times[current_date.c_str()];
 
         Serial.println("Namaz Saatleri: " + city);
         Serial.print("Konumu: Lat ");
@@ -83,12 +86,19 @@ void getPrayerTimes() {
         Serial.print(", Lon ");
         Serial.println(lon, 5);
 
-        Serial.println("İmsak: " + String(prayerTimes[0].as<String>()));
-        Serial.println("Güneş: " + String(prayerTimes[1].as<String>()));
-        Serial.println("Öğle: " + String(prayerTimes[2].as<String>()));
-        Serial.println("İkindi: " + String(prayerTimes[3].as<String>()));
-        Serial.println("Akşam: " + String(prayerTimes[4].as<String>()));
-        Serial.println("Yatsı: " + String(prayerTimes[5].as<String>()));
+        String imsak = prayerTimes[0].as<String>();
+        String gunes = prayerTimes[1].as<String>();
+        String ogle = prayerTimes[2].as<String>();
+        String ikindi = prayerTimes[3].as<String>();
+        String aksam = prayerTimes[4].as<String>();
+        String yatsi = prayerTimes[5].as<String>();
+
+        Serial.println("İmsak: " + imsak);
+        Serial.println("Güneş: " + gunes);
+        Serial.println("Öğle: " + ogle);
+        Serial.println("İkindi: " + ikindi);
+        Serial.println("Akşam: " + aksam);
+        Serial.println("Yatsı: " + yatsi);
       }
     } else {
       Serial.println("HTTP isteği başarısız");
