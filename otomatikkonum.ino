@@ -219,9 +219,6 @@ void loop() {
   current_time_short = current_time.substring(0, 2);
   aksam_short = aksam.substring(0, 2);
   imsak_short = imsak.substring(0, 2); 
-  Serial.println("test Saat: " + current_time_short);
-  Serial.println("test aksam: " + aksam_short);
-  Serial.println("test imsak: " + imsak_short);
   if (current_time_short == imsak_short) {
     digitalWrite(D1_PIN, HIGH); // D1 pini açık
     Serial.println("Sahur vakti bitti, niyetlenmeyi unutmayın!");
