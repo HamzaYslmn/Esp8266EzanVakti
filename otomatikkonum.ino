@@ -150,7 +150,7 @@ void getPrayerTimes() {
     
     HTTPClient https;
 
-    String url = "https://namaz-vakti.vercel.app/api/timesFromCoordinates?lat=" + latitude + "&lng=" + longitude + "&date=" + current_date + "&days=1&timezoneOffset=" + time_offset_dakika + "&calculationMethod=" + calculationMethod;
+    String url = "https://vakit.vercel.app/api/timesFromCoordinates?lat=" + latitude + "&lng=" + longitude + "&date=" + current_date + "&days=1&timezoneOffset=" + time_offset_dakika + "&calculationMethod=" + calculationMethod;
     https.begin(*client, url);
     Serial.println("API isteği gönderiliyor: " + url);
 
